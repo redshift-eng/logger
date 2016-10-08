@@ -39,11 +39,6 @@ function dev(opts) {
   return function *logger(next) {
     // request
     var start = new Date;
-    console.log('  ' + chalk.gray('<--')
-      + ' ' + chalk.bold('%s')
-      + ' ' + chalk.gray('%s'),
-        this.method,
-        this.originalUrl);
 
     try {
       yield next;
@@ -97,6 +92,14 @@ function log(ctx, start, len, err, event) {
   // set the color of the status code;
   var s = status / 100 | 0;
   var color = colorCodes[s];
+  var requestTime = (new Date - start);
+  var timeColor = 'green';
+  
+  if (requestTime > 500) {
+    timeColor = 'red';
+  } else if (requestTime > 200) {
+    timeColor = 'yellow';
+  }
 
   // get the human readable response length
   var length;
@@ -110,18 +113,18 @@ function log(ctx, start, len, err, event) {
 
   var upstream = err ? chalk.red('xxx')
     : event === 'close' ? chalk.yellow('-x-')
-    : chalk.gray('-->')
+    : '';
 
-  console.log('  ' + upstream
+  console.log(upstream
     + ' ' + chalk.bold('%s')
-    + ' ' + chalk.gray('%s')
     + ' ' + chalk[color]('%s')
+    + ' ' + chalk[timeColor]('%s')
     + ' ' + chalk.gray('%s')
     + ' ' + chalk.gray('%s'),
       ctx.method,
-      ctx.originalUrl,
       status,
       time(start),
+      ctx.originalUrl,
       length);
 }
 
