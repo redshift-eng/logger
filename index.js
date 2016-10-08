@@ -120,7 +120,7 @@ function log(ctx, start, len, err, event) {
     + ' ' + chalk[color]('%s')
     + ' ' + chalk[timeColor]('%s')
     + ' ' + chalk.gray('%s')
-    + ' ' + chalk.gray('%s'),
+    + ' (' + chalk.gray('%s') + ')',
       ctx.method,
       status,
       time(start),
